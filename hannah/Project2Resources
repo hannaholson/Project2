@@ -1,3 +1,6 @@
+#Javascript Charts
+https://canvasjs.com/javascript-charts/
+
 #Drop Down Code
 https://stackoverflow.com/questions/46818391/adding-drop-down-menu-to-choropleth-map-to-select-each-state-and-generate-new-gr
 https://www.fla-shop.com/howto/map-with-dropdown/
@@ -5,4 +8,32 @@ https://www.fla-shop.com/howto/map-with-dropdown/
 #Choropleth Code
 https://leafletjs.com/examples/choropleth/
 https://www.anychart.com/blog/2020/05/06/javascript-choropleth-map-tutorial/
+
+#Dashboard Templates
+https://www.bootstrapdash.com/web-dashboard/
+
+#Job Codes
+    15-1211
+        Computer systems analysts 
+    15-1221
+        Computer and information research scientists
+    15-1245
+        Database administrators and architects
+    15-2031
+        Operations research analysts
+    15-2041
+        Statisticians
+    15-1251
+        Computer programmers
+    15-1257
+        Web developers digital interface designers
+    15-2098
+        Data science mathematical science occupations all other
+
+#Dataset
+https://www.bls.gov/oes/special.requests/oesm20st.zip
+https://www.bls.gov/oes/current/oes151245.htm
+
+#Pie Chart Code
+https://canvasjs.com/html5-javascript-pie-chart/
 
