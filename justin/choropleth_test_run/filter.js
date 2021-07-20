@@ -206,7 +206,7 @@ async function delayedLongerDensity() {
     await delayLonger();
     var plot_value_list = [];
     var user_selected_jobCode = "15_2098";
-    var user_selected_stat = "H_PCT90"
+    var user_selected_stat = "H_PCT75"
     var user_selected_stat_value = `stat${user_selected_stat}`
     var user_selected_jobCode_resource = `US_ordered_wages_summary_for_jobCode_${user_selected_jobCode}`;
     var user_job_code_selection = this[user_selected_jobCode_resource].filter(dataAsset => {
@@ -242,3 +242,17 @@ async function delayedLongerDensity() {
 };
 
 delayedLongerDensity();
+
+// var btn = document.getElementById('btn');
+// var select1 = document.getElementById('menu_1');
+//       console.log(select1);
+// var select2 = document.getElementById('menu_2');
+//     console.log(select2);
+
+// btn.addEventListener('click', function(e) {
+//     btn.value = select.value;
+// });
+
+// function changeMap() {
+//     $
+// }
