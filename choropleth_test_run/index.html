@@ -6,49 +6,60 @@
     <title>States Map</title>
 	  <meta charset="utf-8" />	
     <meta name="viewport" content="width=device-width, initial-scale=1.0">		
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/> 
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+    
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">JavaScriptTable</script> 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore.js"></script>
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
-	  <style>html, body {height: 100%; margin: 0; } #map {width: 100vw; height: 100vh;}</style>
-
+	  <style>html, body {height: 100%; width: 100%; margin: 0; padding-left: 10%} 
+    #map {width: 50vw; height: 50vh; text-align: center;}
+    </style>
+    <!-- <script>
+      var select1 = document.getElementById('menu_1');
+      console.log(select1);
+      var select2 = document.getElementById('menu_2');
+      console.log(select2);
+    </script> -->
 	</head>
 
-  <body>
+  <body style = "text-align:center;" id = "body">
 
     <div id='map'></div>
     <script type="text/javascript" src="us-states.js"></script>
     <script type="text/javascript" src="filter.js"></script>
     
     <script type="text/javascript">
-      var map = L.map('map').setView([51.6, -96], 4);
+      var map = L.map('map').setView([37.2, -96], 4);
       L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', { 
         maxZoom: 18, 
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' + 'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>', 
         id: 'mapbox/light-v9', 
         tileSize: 512, 
         zoomOffset: -1	}).addTo(map);
-      var geojson = L.geoJson(statesPlottingData).addTo(map);
+      var geojson = L.geoJson(statesData).addTo(map);
 
       // get color depending on population density value
       function getColor(d) {
-        return  d > 90 ? '#BD0026' :
-                // d > 1000 ? '#800026' :
-                // d > 500  ? '#BD0026' :
-                d > 80  ? '#FC4E2A' :
-                d > 60  ? '#FD8D3C' :
-                // d > 200  ? '#E31A1C' :
-                // d > 100  ? '#FC4E2A' :
-                // d > 50   ? '#FD8D3C' :
+        return  d > 1000 ? '#800026' :
+                // d > 90 ? '#BD0026' :
+                d > 1000 ? '#800026' :
+                d > 500  ? '#BD0026' :
+                // d > 80  ? '#FC4E2A' :
+                // d > 60  ? '#FD8D3C' :
+                d > 200  ? '#E31A1C' :
+                d > 100  ? '#FC4E2A' :
+                d > 50   ? '#FD8D3C' :
                 d > 40   ? '#FEB24C' :
-                // d > 20   ? '#FEB24C' :
-                // d > 10   ? '#FED976' :
+                d > 20   ? '#FEB24C' :
                 d > 10   ? '#FED976' :
+                // d > 10   ? '#FED976' :
                             '#FFEDA0';
       };
       
-      function style(feature) {
+      function style(feature) { 
 		    return  {
 			    weight: 2,
 			    opacity: 1,
@@ -61,14 +72,64 @@
       
       
 
-      var geojson = L.geoJson(statesPlottingData, {
+      var geojson = L.geoJson(statesData, {
 		    style: style,
 	    }).addTo(map);
 
       // console.log(getColor(features.properties.density));
 
     </script>
-  
+
+    <h1>Data Jobs Stats 2020</h1>
+    <p>&nbsp;</p>
+    <h1 style = "color:green;" >
+      Dynamic Table
+    </h1>
+    <p id = "GFG_UP" style = 
+      "font-size: 15px; font-weight: bold;">
+    </p>
+
+    <button onclick = "constructTable('#table')">
+      click here
+    </button>
+
+    <br><br>
+      
+    <table align = "center"
+            id="table" border="1">
+    </table>
+    
+    <form id="form_1" name="form_1">Occupation:
+        <select id="menu_1" name="menu_1">
+            <option value="15_1211">Computer Systems Analysts</option>
+            <option value="15_1221">Computer and Info Research Scientists</option>
+            <option value="15_1245">Database Admin and Architects</option>
+            <option value="15_2031">Operations Research Analysts</option>
+            <option value="15_2041">Statisticians</option>
+            <option value="15_1251">Computer Programmers</option>
+            <option value="15_1257">Web Developers</option>
+            <option value="15_2098">Data Scientist</option>
+        </select>
+    </form>
+    <p>&nbsp;</p>
+    <form id="form_2" name="form_2">Measure:
+        <select id="menu_2" name="menu_2">
+            <option value="H_PCT10">10th Percentile Hourly Wages</option>
+            <option value="H_PCT25">25th Percentile Hourly Wages</option>
+            <option value="H_MEDIAN">Median Hourly Wages</option>
+            <option value="H_MEAN">Mean Hourly Wages</option>
+            <option value="H_PCT75">75th Percentile Hourly Wages</option>
+            <option value="H_PCT90">90th Percentile Hourly Wages</option>
+            <option value="A_PCT10">10th Percentile Annual Wages</option>
+            <option value="A_PCT25">25th Percentile Annual Wages</option>
+            <option value="A_MEDIAN">Median Annual Wages</option>
+            <option value="A_MEAN">Mean Annual Wages</option>
+            <option value="A_PCT75">75th Percentile Annual Wages</option>
+            <option value="A_PCT90">90th Percentile Annual Wages</option>
+        </select>
+        <input onclick="changeMap();" id="map_button" type="button" value="Show Map">
+    </form>
+    
   </body>
 
 </html>
