@@ -201,12 +201,14 @@ function delayLonger() {
     return new Promise(resolve => setTimeout(resolve, 500));
 };
 
+// var user_selected_jobCode = "15_1211";
+// var user_selected_stat = "H_PCT10"
+
 // order forcing function
-async function delayedLongerDensity() {
+async function delayedLongerDensity(user_selected_jobCode, user_selected_stat) {
     await delayLonger();
     var plot_value_list = [];
-    var user_selected_jobCode = "15_2098";
-    var user_selected_stat = "H_PCT75"
+    
     var user_selected_stat_value = `stat${user_selected_stat}`
     var user_selected_jobCode_resource = `US_ordered_wages_summary_for_jobCode_${user_selected_jobCode}`;
     var user_job_code_selection = this[user_selected_jobCode_resource].filter(dataAsset => {
@@ -236,23 +238,96 @@ async function delayedLongerDensity() {
 
     console.log(statesPlottingData);
     console.log(plot_value_list);
-    console.log(Math.min.apply(null, plot_value_list));
+    var plot_value_list_min = Math.min.apply(null, plot_value_list);
+    console.log(plot_value_list_min);
+    var plot_nonZero_value_list = plot_value_list.filter(dataAsset => {
+        return dataAsset != 0;
+    });
+    var plot_nonZero_value_list_min = Math.min.apply(null, plot_nonZero_value_list);
+    console.log(plot_nonZero_value_list_min);
     console.log(Math.max.apply(null, plot_value_list));
 
 };
 
-delayedLongerDensity();
+delayedLongerDensity("15_1211", "H_PCT10");
 
-// var btn = document.getElementById('btn');
-// var select1 = document.getElementById('menu_1');
-//       console.log(select1);
-// var select2 = document.getElementById('menu_2');
-//     console.log(select2);
+var robsStatesData = [];
+var robsStatesData = statesPlottingData.features;
+
+// order forcing function
+function delayEvenLonger(delay) {
+    return new Promise(resolve => setTimeout(resolve, delay));
+};
+
+// table constructor
+// async 
+function constructTable(selector) {
+    // await delayEvenLonger (50);
+    var cols = Headers(robsStatesData, selector);  
+    
+    // // outputForDebugging
+    // console.log(robsStatesData);
+    
+     
+
+    // Traversing the JSON data
+    for (var i = 0; i < robsStatesData.length; i++) {
+        var row = $('<tr/>');
+
+        // // outputForDebugging
+        // console.log(robsStatesData[i].properties);
+        
+        var plot_parameters = ['name', 'density'];
+        
+        for (var p = 0; p < 2; p++) {
+            var val = robsStatesData[i].properties[plot_parameters[p]];
+
+            // If there is any key, which is matching with the column name
+            if (val == null) val = "";  
+                row.append($('<td/>').html(val));
+        
+        };
+        
+        // Adding each row to the table
+        $(selector).append(row);
+    }
+}
+
+// async 
+function Headers(list, selector) {
+    // await delayEvenLonger (50);
+    
+    var get_columns = robsStatesData[0]
+    var columns = [];
+    var columns = Object.keys(get_columns.properties);
+    var header = $('<tr/>');
+
+            // Creating the header
+            header.append($('<th/>').html("state"));
+            header.append($('<th/>').html("data"));
+    
+    // Appending the header to the table
+    $(selector).append(header);
+        console.log(columns);
+        return columns;
+}; 
+
+
+
+// menu buttons
+var btn = document.getElementById('btn');
+var select1 = document.getElementById('menu_1');
+      console.log(select1);
+var select2 = document.getElementById('menu_2');
+    console.log(select2);
 
 // btn.addEventListener('click', function(e) {
 //     btn.value = select.value;
 // });
 
-// function changeMap() {
-//     $
-// }
+function changeMap() {
+    $("map_container.empty");
+    var topLevelValue = $("#menu_1 option:selected").val();
+    var mapTypeValue = $("#menu_2 option:selected").val()
+    $("#maps_container").load(topLevelValue+mapTypeValue+".htm #map_container");
+};
