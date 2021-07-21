@@ -1,5 +1,6 @@
 // set script variables
 var csv;
+var legend;
 var cumulative_array = [];
 var states_array = [];
 var data_variable_names_array = [];
@@ -54,9 +55,14 @@ fetch('stateData.geojson').then(response => response.text()).then(data => {
 // states loop test
 test_states = states_array;
 
+function yEqualsMXPlusB(maxY, minY, maxX, minX, x) {
+    var y = +((((maxY - minY)/(maxX - minX))*x) + (minY - (minX*((maxY - minY)/(maxX - minX)))));
+    return y;
+};
+
 // order forcing function
 function delay() {
-    return new Promise(resolve => setTimeout(resolve, 50));
+    return new Promise(resolve => setTimeout(resolve, 200));
 };
 
 // order forcing function
@@ -198,11 +204,8 @@ processArrayOfCSVs(csv_source_array, test_states);
 
 // order forcing function
 function delayLonger() {
-    return new Promise(resolve => setTimeout(resolve, 500));
+    return new Promise(resolve => setTimeout(resolve, 300));
 };
-
-// var user_selected_jobCode = "15_1211";
-// var user_selected_stat = "H_PCT10"
 
 // order forcing function
 async function delayedLongerDensity(user_selected_jobCode, user_selected_stat) {
@@ -215,8 +218,8 @@ async function delayedLongerDensity(user_selected_jobCode, user_selected_stat) {
         return dataAsset.statName === user_selected_stat;
     });
     
-    // outputForDebugging
-    console.log(user_job_code_selection) 
+    // // outputForDebugging
+    // console.log(user_job_code_selection) 
 
     for(state in statesPlottingData.features) {
         var state_user_job_code_selection = user_job_code_selection[state];
@@ -236,20 +239,100 @@ async function delayedLongerDensity(user_selected_jobCode, user_selected_stat) {
 
     };
 
-    console.log(statesPlottingData);
-    console.log(plot_value_list);
+    // console.log(statesPlottingData);
+    // console.log(plot_value_list);
     var plot_value_list_min = Math.min.apply(null, plot_value_list);
     console.log(plot_value_list_min);
     var plot_nonZero_value_list = plot_value_list.filter(dataAsset => {
         return dataAsset != 0;
     });
     var plot_nonZero_value_list_min = Math.min.apply(null, plot_nonZero_value_list);
-    console.log(plot_nonZero_value_list_min);
+    // console.log(plot_nonZero_value_list_min);
+    var plot_value_list_max = Math.max.apply(null, plot_value_list);
     console.log(Math.max.apply(null, plot_value_list));
+
+    var d6 = yEqualsMXPlusB(plot_value_list_max, plot_nonZero_value_list_min, 6, 0, 5);
+    console.log(yEqualsMXPlusB(plot_value_list_max, plot_nonZero_value_list_min, 6, 0, 5));
+    var d5 = yEqualsMXPlusB(plot_value_list_max, plot_nonZero_value_list_min, 6, 0, 4);
+    var d4 = yEqualsMXPlusB(plot_value_list_max, plot_nonZero_value_list_min, 6, 0, 3);
+    var d3 = yEqualsMXPlusB(plot_value_list_max, plot_nonZero_value_list_min, 6, 0, 2);
+    var d2 = yEqualsMXPlusB(plot_value_list_max, plot_nonZero_value_list_min, 6, 0, 1);
+    var d1 = yEqualsMXPlusB(plot_value_list_max, plot_nonZero_value_list_min, 6, 0, 0);
+
+    var geojson = L.geoJson(statesPlottingData).addTo(map);
+
+    // get color depending on population density value
+    function getColor(d) {
+    return  d > d6 ? '#800026' :
+            d > d5 ? '#BD0026' :
+            d > d4  ? '#FC4E2A' :
+            d > d3  ? '#FD8D3C' :
+            d > d2   ? '#FEB24C' :
+            d > d1   ? '#FED976' :
+                        '#FFEDA0';
+            // d > 1000 ? '#800026' :
+            // d > 500  ? '#BD0026' :
+            // d > 200  ? '#E31A1C' :
+            // d > 100  ? '#FC4E2A' :
+            // d > 50   ? '#FD8D3C' :
+            // d > 20   ? '#FEB24C' :
+            // d > 10   ? '#FED976' :
+            // '#FFEDA0';
+    };
+    
+    function style(feature) { 
+        return  {
+            weight: 2,
+            opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7,
+        fillColor: getColor(feature.properties.density)
+        };
+    };
+    
+    var geojson = L.geoJson(statesPlottingData, {
+        style: style,
+    }).addTo(map);
+
+    var d6l = Math.round(d6, 2)
+    var d5l = Math.round(d5, 2)
+    var d4l = Math.round(d4, 2)
+    var d3l = Math.round(d3, 2)
+    var d2l = Math.round(d2, 2)
+    var d1l = Math.round(d1, 2)
+
+    
+    legend = L.control({position: 'topright'});
+
+	legend.onAdd = function (map) {
+
+		var div = L.DomUtil.create('div', 'info legend'),
+			grades = [0, d1l, d2l, d3l, d4l, d5l, d6l],
+			labels = [],
+			from, to;
+
+		for (var i = 0; i < grades.length; i++) {
+			from = grades[i];
+			to = grades[i + 1];
+
+			labels.push(
+				'<i style="background:' + getColor(from + 1) + '"></i> ' +
+				from + (to ? '&ndash;' + to : '+'));
+		}
+
+		div.innerHTML = labels.join('<br>');
+		return div;
+	};
+
+	legend.addTo(map);
 
 };
 
-delayedLongerDensity("15_1211", "H_PCT10");
+function removeLegend() {
+    map.removeControl(currentLegend)
+}
+// delayedLongerDensity("15_1211", "H_PCT10");
 
 var robsStatesData = [];
 var robsStatesData = statesPlottingData.features;
@@ -260,19 +343,20 @@ function delayEvenLonger(delay) {
 };
 
 // table constructor
-// async 
-function constructTable(selector) {
-    // await delayEvenLonger (50);
+async function constructTable(selector) {
+    await delayEvenLonger (400);
+
+    refreshTable();
+
     var cols = Headers(robsStatesData, selector);  
     
     // // outputForDebugging
     // console.log(robsStatesData);
     
-     
-
     // Traversing the JSON data
     for (var i = 0; i < robsStatesData.length; i++) {
-        var row = $('<tr/>');
+        var row = null;
+        row = $('<tr/>');
 
         // // outputForDebugging
         // console.log(robsStatesData[i].properties);
@@ -291,16 +375,16 @@ function constructTable(selector) {
         // Adding each row to the table
         $(selector).append(row);
     }
+
+
+
 }
 
-// async 
 function Headers(list, selector) {
-    // await delayEvenLonger (50);
-    
     var get_columns = robsStatesData[0]
     var columns = [];
     var columns = Object.keys(get_columns.properties);
-    var header = $('<tr/>');
+    header = $('<tr/>');
 
             // Creating the header
             header.append($('<th/>').html("state"));
@@ -308,11 +392,13 @@ function Headers(list, selector) {
     
     // Appending the header to the table
     $(selector).append(header);
-        console.log(columns);
+        // console.log(columns);
         return columns;
 }; 
 
-
+function refreshTable() {
+    $('#table').empty();
+};
 
 // menu buttons
 var btn = document.getElementById('btn');
@@ -321,13 +407,12 @@ var select1 = document.getElementById('menu_1');
 var select2 = document.getElementById('menu_2');
     console.log(select2);
 
-// btn.addEventListener('click', function(e) {
-//     btn.value = select.value;
-// });
-
 function changeMap() {
     $("map_container.empty");
     var topLevelValue = $("#menu_1 option:selected").val();
     var mapTypeValue = $("#menu_2 option:selected").val()
+    console.log(topLevelValue);
+    console.log(mapTypeValue);
+    delayedLongerDensity(topLevelValue, mapTypeValue);
     $("#maps_container").load(topLevelValue+mapTypeValue+".htm #map_container");
 };
