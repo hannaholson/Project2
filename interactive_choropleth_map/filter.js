@@ -330,8 +330,8 @@ async function delayedLongerDensity(user_selected_jobCode, user_selected_stat) {
 };
 
 function removeLegend() {
-    map.removeControl(currentLegend)
-}
+    map.removeControl(legend);
+};
 // delayedLongerDensity("15_1211", "H_PCT10");
 
 var robsStatesData = [];
