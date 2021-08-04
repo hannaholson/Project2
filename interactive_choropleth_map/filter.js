@@ -252,7 +252,6 @@ async function delayedLongerDensity(user_selected_jobCode, user_selected_stat) {
     console.log(Math.max.apply(null, plot_value_list));
 
     var d6 = yEqualsMXPlusB(plot_value_list_max, plot_nonZero_value_list_min, 6, 0, 5);
-    console.log(yEqualsMXPlusB(plot_value_list_max, plot_nonZero_value_list_min, 6, 0, 5));
     var d5 = yEqualsMXPlusB(plot_value_list_max, plot_nonZero_value_list_min, 6, 0, 4);
     var d4 = yEqualsMXPlusB(plot_value_list_max, plot_nonZero_value_list_min, 6, 0, 3);
     var d3 = yEqualsMXPlusB(plot_value_list_max, plot_nonZero_value_list_min, 6, 0, 2);
@@ -260,6 +259,13 @@ async function delayedLongerDensity(user_selected_jobCode, user_selected_stat) {
     var d1 = yEqualsMXPlusB(plot_value_list_max, plot_nonZero_value_list_min, 6, 0, 0);
 
     var geojson = L.geoJson(statesPlottingData).addTo(map);
+
+    var d6l = Math.round(d6, 2)
+    var d5l = Math.round(d5, 2)
+    var d4l = Math.round(d4, 2)
+    var d3l = Math.round(d3, 2)
+    var d2l = Math.round(d2, 2)
+    var d1l = Math.round(d1, 2)
 
     // get color depending on population density value
     function getColor(d) {
@@ -286,7 +292,7 @@ async function delayedLongerDensity(user_selected_jobCode, user_selected_stat) {
             opacity: 1,
         color: 'white',
         dashArray: '3',
-        fillOpacity: 0.7,
+        fillOpacity: 1,
         fillColor: getColor(feature.properties.density)
         };
     };
@@ -294,13 +300,6 @@ async function delayedLongerDensity(user_selected_jobCode, user_selected_stat) {
     var geojson = L.geoJson(statesPlottingData, {
         style: style,
     }).addTo(map);
-
-    var d6l = Math.round(d6, 2)
-    var d5l = Math.round(d5, 2)
-    var d4l = Math.round(d4, 2)
-    var d3l = Math.round(d3, 2)
-    var d2l = Math.round(d2, 2)
-    var d1l = Math.round(d1, 2)
 
     
     legend = L.control({position: 'topright'});
